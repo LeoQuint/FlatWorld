@@ -44,47 +44,54 @@ public class MeshGenerator : MonoBehaviour {
     #endregion
 
     #region Public API
-    public static Mesh GenerateGridMesh(int x, int y, float size)
+    public static Mesh GenerateGridMesh(int x, int y, float size, bool setUvs = true)
     {
         Mesh mesh = new Mesh();
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
         List<Vector2> uvs = new List<Vector2>();
-        float localPointSize = size * 0.5f;
+        float halfSize = size * 0.5f;
 
         Vector3 position = Vector3.zero;
         int quads = 0;
         for (int i = 0; i < x; ++i)
         {
-            position.x = i * size;
+            position.x = ((x-1) * -halfSize) + (i * size);
             for (int j = 0; j < y; ++j)
             {
-                /*Quads:
-                    1  2   
-                    0  3
+                /*
+                Quads:
+                1  2   
+                0  3
                 */
                 quads = ((i * y) + j)*4;
-                position.y = j * size;
-                vertices.Add(position + (BOTTOM_LEFT * localPointSize));
-                vertices.Add(position + (TOP_LEFT * localPointSize));
-                vertices.Add(position + (TOP_RIGHT * localPointSize));
-                vertices.Add(position + (BOTTOM_RIGHT * localPointSize));
+                position.y = ((y-1) * -halfSize) + (j * size);
+                vertices.Add(position + (BOTTOM_LEFT * halfSize));
+                vertices.Add(position + (TOP_LEFT * halfSize));
+                vertices.Add(position + (TOP_RIGHT * halfSize));
+                vertices.Add(position + (BOTTOM_RIGHT * halfSize));
                 triangles.Add(0 + quads);
                 triangles.Add(1 + quads);
                 triangles.Add(2 + quads);
                 triangles.Add(2 + quads);
                 triangles.Add(3 + quads);
                 triangles.Add(0 + quads);
-                uvs.Add(BOTTOM_LEFT_V2);
-                uvs.Add(TOP_LEFT_V2);
-                uvs.Add(TOP_RIGHT_V2);
-                uvs.Add(BOTTOM_RIGHT_V2);
+                if (setUvs)
+                {
+                    uvs.Add(BOTTOM_LEFT_V2);
+                    uvs.Add(TOP_LEFT_V2);
+                    uvs.Add(TOP_RIGHT_V2);
+                    uvs.Add(BOTTOM_RIGHT_V2);
+                }                
             }
         }
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
-        mesh.uv = uvs.ToArray();
+        if (setUvs)
+        {
+            mesh.uv = uvs.ToArray();
+        }       
 
         return mesh;
     }
