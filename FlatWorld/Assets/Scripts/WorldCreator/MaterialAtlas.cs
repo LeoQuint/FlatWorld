@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "AtlasMap", menuName = "Materials/AtlasMap", order = 1)]
+[CreateAssetMenu(fileName = "AtlasMap", menuName = "ScriptableObject/AtlasMap", order = 1)]
 public class MaterialAtlas : ScriptableObject {
 
     ////////////////////////////////
@@ -27,19 +27,33 @@ public class MaterialAtlas : ScriptableObject {
     ////////////////////////////////
     public string _AtlasName;
     public Material _Material;
-    public List<List<MaterialAtlasType>> _Map;
-	////////////////////////////////
+    public int _Size;//Atlases need to be square. 4X4, 3X3, etc
+    public string[]  _Types;
+    ////////////////////////////////
     ///			Protected		 ///
     ////////////////////////////////
 
-	////////////////////////////////
+    ////////////////////////////////
     ///			Private			 ///
     ////////////////////////////////
-
-    #region Unity API
-    #endregion
-
     #region Public API
+    //Returns the uvs of the specific type of texture + the size (z)
+    public Vector3 GetUVs(string type)
+    {
+        for (int i = 0; i < _Size; ++i)
+        {
+            for (int j = 0; j < _Size; ++j)
+            {
+                if (type == _Types[(i * _Size) + j])
+                {
+                    float uvSize = 1f / (float)_Size;
+                    return new Vector3((float)i, (float)j, uvSize);
+                }
+            }
+        }
+        Debug.LogError("Type not found. " + type);
+        return Vector3.zero;
+    }
     #endregion
 
     #region Protect
@@ -47,25 +61,4 @@ public class MaterialAtlas : ScriptableObject {
 
     #region Private
     #endregion
-}
-
-public enum MaterialAtlasType
-{
-    Dirt1,
-    Dirt2,
-    Dirt3,
-    Dirt4,
-    Dirt5,
-    Dirt6,
-    Dirt7,
-    Dirt8,
-    Dirt9,
-    Dirt10,
-    Dirt11,
-    Dirt12,
-    Dirt13,
-    Dirt14,
-    Dirt15,
-    Ground16,
-    Water
 }
