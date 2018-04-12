@@ -24,6 +24,9 @@ public class WorldCreator : MonoBehaviour {
     ///			Public			 ///
     ////////////////////////////////
     public MaterialAtlas _Atlas;
+    public Texture2D _WorldMap;
+    public int _TextureWidth;
+    public int _TextureHeight;
     ////////////////////////////////
     ///			Protected		 ///
     ////////////////////////////////
@@ -35,7 +38,7 @@ public class WorldCreator : MonoBehaviour {
     #region Unity API
     private void Awake()
     {
-
+        LoadMapSection();
     }
     #endregion
 
@@ -46,5 +49,16 @@ public class WorldCreator : MonoBehaviour {
     #endregion
 
     #region Private
+    private void LoadMapSection()
+    {
+        WorldBlock block = CreateWorldBlock();
+        //block.Paint();
+    }
+
+    private WorldBlock CreateWorldBlock()
+    {
+        GameObject g = new GameObject("Block");
+        return g.AddComponent<WorldBlock>();       
+    }
     #endregion
 }
