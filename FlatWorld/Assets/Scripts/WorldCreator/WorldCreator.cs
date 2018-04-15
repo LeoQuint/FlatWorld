@@ -30,7 +30,7 @@ public class WorldCreator : MonoBehaviour {
     ////////////////////////////////
     ///			Protected		 ///
     ////////////////////////////////
-
+     
     ////////////////////////////////
     ///			Private			 ///
     ////////////////////////////////
@@ -43,6 +43,10 @@ public class WorldCreator : MonoBehaviour {
     #endregion
 
     #region Public API
+    public void Update()
+    {
+        
+    }
     #endregion
 
     #region Protect
@@ -51,8 +55,28 @@ public class WorldCreator : MonoBehaviour {
     #region Private
     private void LoadMapSection()
     {
+        Color c;
+
+        List<Vector3> uvs = new List<Vector3>();
+        for (int i = 0; i < _TextureHeight; ++i)
+        {
+            for (int j = 0; j < _TextureWidth; ++j)
+            {
+                c = _WorldMap.GetPixel(i, j);
+                if (c.b != 1f)
+                {
+                    uvs.Add(_Atlas.GetUVs("Grass"));
+                }
+                else
+                {
+                    uvs.Add(_Atlas.GetUVs("WhiteSand"));
+                }
+            }
+        }
         WorldBlock block = CreateWorldBlock();
-        //block.Paint();
+        block.BlockSize = _TextureWidth;
+        block.Instantiate();
+        block.Paint(uvs, _Atlas._Material);
     }
 
     private WorldBlock CreateWorldBlock()

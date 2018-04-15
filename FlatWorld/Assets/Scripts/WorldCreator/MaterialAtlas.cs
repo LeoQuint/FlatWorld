@@ -36,18 +36,25 @@ public class MaterialAtlas : ScriptableObject {
     ////////////////////////////////
     ///			Private			 ///
     ////////////////////////////////
+
+    //properties
+    public float SizeUV
+    {
+        get { return 1f / (float)_Size; }
+    }
+
     #region Public API
     //Returns the uvs of the specific type of texture + the size (z)
     public Vector3 GetUVs(string type)
     {
-        for (int i = 0; i < _Size; ++i)
+        float uvSize = 1f / (float)_Size;
+        for (int x = 0; x < _Size; ++x)
         {
-            for (int j = 0; j < _Size; ++j)
+            for (int y = 0; y < _Size; ++y)
             {
-                if (type == _Types[(i * _Size) + j])
+                if (type == _Types[(x * _Size) + y])
                 {
-                    float uvSize = 1f / (float)_Size;
-                    return new Vector3((float)i, (float)j, uvSize);
+                    return new Vector3((float)x* uvSize, (float)y * uvSize, uvSize);
                 }
             }
         }

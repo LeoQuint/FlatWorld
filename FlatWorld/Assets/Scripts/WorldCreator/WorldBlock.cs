@@ -15,9 +15,7 @@ public class WorldBlock : MonoBehaviour {
     ////////////////////////////////
     ///			Statics			 ///
     ////////////////////////////////
-    public static int BlockSize = 10;
-    public static float SquareSize = 1f;
-    private const float UV_SIZE = 0.25f;
+
     ////////////////////////////////
     ///	  Serialized In Editor	 ///
     ////////////////////////////////
@@ -25,7 +23,9 @@ public class WorldBlock : MonoBehaviour {
     ////////////////////////////////
     ///			Public			 ///
     ////////////////////////////////
-
+    public int BlockSize = 10;
+    public float SquareSize = 1f;
+    public float UV_SIZE = 0.25f;
     ////////////////////////////////
     ///			Protected		 ///
     ////////////////////////////////
@@ -34,6 +34,9 @@ public class WorldBlock : MonoBehaviour {
     ///			Private			 ///
     ////////////////////////////////
     private Mesh m_Mesh;
+    private MeshRenderer m_Renderer;
+    private float MaxEnd_UV;
+    private float MaxStart_UV;
 
     #region Unity API
     #endregion
@@ -42,12 +45,16 @@ public class WorldBlock : MonoBehaviour {
     public void Instantiate()
     {
         MeshFilter mf = gameObject.AddComponent<MeshFilter>();
-        MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();       
-        mf.mesh = MeshGenerator.GenerateGridMesh(BlockSize, BlockSize, SquareSize);       
+        m_Renderer = gameObject.AddComponent<MeshRenderer>();
+        m_Mesh = MeshGenerator.GenerateGridMesh(BlockSize, BlockSize, SquareSize);
+        mf.mesh = m_Mesh;    
     }
 
-    public void Paint(List<Vector3> uvMap)
+    public void Paint(List<Vector3> uvMap, Material mat)
     {
+        m_Renderer.material = mat;
+        //MaxEnd_UV = 1f / UV_SIZE;
+        //MaxStart_UV = MaxEnd_UV - 1f;
         if (m_Mesh != null)
         {
             List<Vector2> uvs = new List<Vector2>();
@@ -56,12 +63,15 @@ public class WorldBlock : MonoBehaviour {
             {
                 for (int j = 0; j < BlockSize; ++j)
                 {
-                    float row = Mathf.Round(Random.Range(0f, 3f)) / 4f;
-                    float col = Mathf.Round(Random.Range(0f, 3f)) / 4f;
-                    uvs.Add(new Vector2(row, col));
-                    uvs.Add(new Vector2(row, col + UV_SIZE));
-                    uvs.Add(new Vector2(row + UV_SIZE, col + UV_SIZE));
-                    uvs.Add(new Vector2(row + UV_SIZE, col));
+
+                    //float row = Mathf.Round(Random.Range(0f, MaxStart_UV)) / MaxEnd_UV;
+                    //float col = Mathf.Round(Random.Range(0f, MaxStart_UV)) / MaxEnd_UV;
+                    int uv = i * BlockSize + j;
+                    Debug.Log(uv);
+                    uvs.Add(new Vector2(uvMap[uv].x, uvMap[uv].y));
+                    uvs.Add(new Vector2(uvMap[uv].x, uvMap[uv].y + uvMap[uv].z));
+                    uvs.Add(new Vector2(uvMap[uv].x + uvMap[uv].z, uvMap[uv].y + uvMap[uv].z));
+                    uvs.Add(new Vector2(uvMap[uv].x + uvMap[uv].z, uvMap[uv].y));
                 }
             }
 
