@@ -53,8 +53,6 @@ public class WorldBlock : MonoBehaviour {
     public void Paint(List<Vector3> uvMap, Material mat)
     {
         m_Renderer.material = mat;
-        //MaxEnd_UV = 1f / UV_SIZE;
-        //MaxStart_UV = MaxEnd_UV - 1f;
         if (m_Mesh != null)
         {
             List<Vector2> uvs = new List<Vector2>();
@@ -63,11 +61,7 @@ public class WorldBlock : MonoBehaviour {
             {
                 for (int j = 0; j < BlockSize; ++j)
                 {
-
-                    //float row = Mathf.Round(Random.Range(0f, MaxStart_UV)) / MaxEnd_UV;
-                    //float col = Mathf.Round(Random.Range(0f, MaxStart_UV)) / MaxEnd_UV;
                     int uv = i * BlockSize + j;
-                    Debug.Log(uv);
                     uvs.Add(new Vector2(uvMap[uv].x, uvMap[uv].y));
                     uvs.Add(new Vector2(uvMap[uv].x, uvMap[uv].y + uvMap[uv].z));
                     uvs.Add(new Vector2(uvMap[uv].x + uvMap[uv].z, uvMap[uv].y + uvMap[uv].z));
